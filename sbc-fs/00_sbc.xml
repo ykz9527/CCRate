@@ -1,0 +1,16 @@
+<extension name="Local_Extension">
+  <condition field="network_addr" expression="^192\.168\.40\.106$|^172\.17\.83\.2$">
+      <action application="curl" inline="true" data="http://localhost:8080/rate"/>
+  </condition>
+  <condition field="${curl_response_data}" expression="1" break="on-true">
+      <action application="bridge" data="sofia/external/1002@192.168.40.207:5080"/>
+  </condition>
+  <condition field="${curl_response_data}" expression="0">
+      <!--<action application="set" data="ringback=$${hold_music}"/>
+      <action application="bridge" data="{ignore_early_media=true}loopback/wait"/>
+      <action application="set" data="call_timeout=60"/>-->
+      <action application="ring_ready"/>
+      <action application="pre_answer" data="/usr/local/freeswitch/sounds/1.mp3"/>
+      <action application="sleep" data="60000"/>
+  </condition>
+</extension>
